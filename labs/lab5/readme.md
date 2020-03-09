@@ -38,9 +38,9 @@ Now that you've deployed your ASA job, you need to associate the IoT Hub instanc
 |2. Click **+ Add stream input** and choose **IoT Hub** from the list|
 |3. Name the **Input alias** _sensor-data-iot-hub-input_|
 |4. Select **Provide IoT Hub settings manually**|
-|5. In the _Iot Hub_ box type **piday-hub**|
-|6. In the _Shared access policy name_ box type **piday**|
-|7. In the _Shared access policy key_ box paste **bH+LVqVWIIQNuT8ObJnfkJi6ocjNtkFR1/nONMGTOHE=**. **Note - YOU SHOULD NEVER PUT ACCESS KEYS IN A PUBLIC REPO!** |
+|5. In the **Iot Hub** box type _piday-hub_|
+|6. In the **Shared access policy name** box type _piday_|
+|7. In the **Shared access policy key** box paste _bH+LVqVWIIQNuT8ObJnfkJi6ocjNtkFR1/nONMGTOHE=_. **Note - YOU SHOULD NEVER PUT ACCESS KEYS IN A PUBLIC REPO!** |
 |8. Have some fun with the _Consumer group_ value. It's not often that you get to use the modulo (mod) operator but, today, you're going to take advantage of the opportunity. Set your _Consumer group_ value to _[lowercaseCityName]_-group-_[team# mod 5]_. Example: Team 1 mod 5 = 1|
 |9. Click **Save**|
 
@@ -65,6 +65,8 @@ Alright, your job now has an input and an output. Finish up the ASA job by writi
 |2. In the query editor window, change **[YourOutputAlias]** to _[cosmosdb-output]_ and **[YourInputAlias]** to _[sensor-data-iot-hub-input]_|
 |3. Click **▶ Test Query** to capture the stream as sample data|
 |4. Click **Save query**|
+|5. Choose **Overview** from the top of the menu containing Inputs, Outputs, and Query|
+|6. Click **▶ Start** and **Start** |
 
 ## TASK 6: View Data In Cosmos DB
 Sensor data is currently being streamed to your (auto-magically provisioned) Cosmos DB. Take a look at your data that's now stored on someone else's compu...I mean, the cloud.....

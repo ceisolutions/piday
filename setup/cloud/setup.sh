@@ -67,7 +67,7 @@ do
   	--account-name "${user_name}db" \
 	--database-name "pi-day" \
 	--name "sensor-data" \
-	--partition-key-path "/_id" \
+	--partition-key-path "/city" \
 	--resource-group $resource_group_name
   
   ((counter++))

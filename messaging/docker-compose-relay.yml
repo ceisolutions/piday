@@ -1,0 +1,14 @@
+version: '3'
+services:
+  listener:
+    build: listener
+    network_mode: host
+    depends_on: [redis]
+  relay: 
+      build: relay
+      network_mode: host
+      depends_on: [redis]
+  redis:
+    image: redis
+    ports:
+        - "6379:6379"

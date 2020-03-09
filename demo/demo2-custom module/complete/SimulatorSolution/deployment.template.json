@@ -1,0 +1,134 @@
+{
+  "$schema-template": "2.0.0",
+  "modulesContent": {
+    "$edgeAgent": {
+      "properties.desired": {
+        "schemaVersion": "1.0",
+        "runtime": {
+          "type": "docker",
+          "settings": {
+            "minDockerVersion": "v1.25",
+            "loggingOptions": "",
+            "registryCredentials": {
+              "ceiiotdemo": {
+                "username": "$CONTAINER_REGISTRY_USERNAME_ceiiotdemo",
+                "password": "$CONTAINER_REGISTRY_PASSWORD_ceiiotdemo",
+                "address": "ceiiotdemo.azurecr.io"
+              }
+            }
+          }
+        },
+        "systemModules": {
+          "edgeAgent": {
+            "type": "docker",
+            "settings": {
+              "image": "mcr.microsoft.com/azureiotedge-agent:1.0",
+              "createOptions": {}
+            }
+          },
+          "edgeHub": {
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "mcr.microsoft.com/azureiotedge-hub:1.0",
+              "createOptions": {
+                "HostConfig": {
+                  "PortBindings": {
+                    "5671/tcp": [
+                      {
+                        "HostPort": "5671"
+                      }
+                    ],
+                    "8883/tcp": [
+                      {
+                        "HostPort": "8883"
+                      }
+                    ],
+                    "443/tcp": [
+                      {
+                        "HostPort": "443"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "modules": {
+          "SimulatedTemperatureSensor": {
+            "version": "1.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "mcr.microsoft.com/azureiotedge-simulated-temperature-sensor:1.0",
+              "createOptions": {}
+            }
+          },
+          "StreamAnalytics": {
+            "version": "1.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "mcr.microsoft.com/azure-stream-analytics/azureiotedge:1.0.6",
+              "createOptions": {}
+            },
+            "env": {
+              "PlanId": {
+                "value": "stream-analytics-on-iot-edge"
+              }
+            }
+          },
+          "ResetReporter": {
+            "version": "1.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "${MODULES.ResetReporter}",
+              "createOptions": {}
+            }
+          }
+        }
+      }
+    },
+    "$edgeHub": {
+      "properties.desired": {
+        "schemaVersion": "1.0",
+        "routes": {
+          "SimulatedTemperatureSensorToIoTHub": "FROM /messages/modules/SimulatedTemperatureSensor/* INTO $upstream",
+          "StreamAnalyticsToIoTHub": "FROM /messages/modules/StreamAnalytics/outputs/* INTO $upstream",
+          "SimulatedTemperatureSensorToStreamAnalytics": "FROM /messages/modules/SimulatedTemperatureSensor/* INTO BrokeredEndpoint(\"/modules/StreamAnalytics/inputs/temperature\")",
+          "StreamAnalyticsToReset": "FROM /messages/modules/StreamAnalytics/* INTO BrokeredEndpoint(\"/modules/SimulatedTemperatureSensor/inputs/control\")",
+          "StreamAnalyticsToResetReporter": "FROM /messages/modules/StreamAnalytics/* INTO BrokeredEndpoint(\"/modules/ResetReporter/inputs/reporter\")",
+          "ResetReporterToIoTHub": "FROM /messages/modules/ResetReporter/* INTO $upstream"
+        },
+        "storeAndForwardConfiguration": {
+          "timeToLiveSecs": 7200
+        }
+      }
+    },
+    "SimulatedTemperatureSensor": {
+      "properties.desired": {
+        "SendData": true,
+        "SendInterval": 5
+      }
+    },
+    "StreamAnalytics": {
+      "properties.desired": {
+        "ASAJobInfo": "https://ceiiotedgedemosa.blob.core.windows.net/asa/ASAEdgeJobs/d134e0fc-b8e0-4034-9e64-54e65dc3ed00/33e9b870-a5d9-4e66-bef7-9e9c315a20e4/ASAEdgeJobDefinition.zip?sv=2018-03-28&sr=b&sig=bCmc9SqBbLLCe0AUAQ3niTiUs05OOQHUx6ToM3XYckw%3D&st=2020-02-28T18%3A17%3A13Z&se=2023-02-28T18%3A27%3A13Z&sp=r",
+        "ASAJobResourceId": "/subscriptions/6ffa94d1-182a-4a3a-af1f-7744f649e621/resourceGroups/iot-edge-demos/providers/Microsoft.StreamAnalytics/streamingjobs/cei-iot-edge-demo-asa",
+        "ASAJobEtag": "d278809d-9f36-4e69-aba6-5d6496b0c42a",
+        "PublishTimestamp": "2/28/2020 6:27:13 PM"
+      }
+    },
+    "ResetReporter": {
+      "properties.desired": {
+        "highTemperature": 20
+      }
+    }
+  }
+}

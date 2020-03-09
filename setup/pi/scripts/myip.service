@@ -1,0 +1,14 @@
+[Unit]
+Description=IP Display SenseHat Service
+After=docker.service
+
+[Service]
+ExecStart=/usr/bin/docker-compose -f ./piday/setup/pi/TellMeMyIp/docker-compose.yml up
+WorkingDirectory=/home/pi/
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target

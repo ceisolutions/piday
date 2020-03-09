@@ -1,0 +1,6 @@
+version: '3'
+services:
+  tellmemyip:
+    build: TellMeMyIp
+    network_mode: host
+    privileged: true

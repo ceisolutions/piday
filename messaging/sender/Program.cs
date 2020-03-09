@@ -38,7 +38,7 @@ namespace sender
             {
                 var u = new UdpClient(BindPort) { EnableBroadcast = true };
                 var ipAddress = IPAddress.Parse("192.168.2.255");
-+               u.Connect(ipAddress, SendPort);
+                u.Connect(ipAddress, SendPort);
 
                 byte[] sendbuf = Encoding.ASCII.GetBytes(message);
 

@@ -21,6 +21,7 @@ apt-get install docker-compose -y
 scriptdir=`dirname "$BASH_SOURCE"`
 
 echo "Getting Docker Images ..."
+chmod +x $scriptdir/docker_images.sh
 $scriptdir/docker_images.sh
 
 echo "Check for dotnet 2.1"
